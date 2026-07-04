@@ -34,22 +34,28 @@ function handleTilt(betaDeg: number): void {
 async function startPlaying(): Promise<void> {
   // iOSではセンサー許可もAudioContext生成もユーザー操作起点が必須のため、
   // どちらもこのクリックハンドラ内で行う。
-  const granted = await requestOrientationPermission();
-  if (!granted) {
-    statusDisplay.textContent = 'センサーの利用が許可されませんでした。ページを再読み込みしてやり直せます。';
-    return;
-  }
+  // requestPermission や resume はジェスチャ消費済み等の理由で reject しうるため、
+  // まとめて捕捉してユーザーに再試行を案内する。
+  try {
+    const granted = await requestOrientationPermission();
+    if (!granted) {
+      statusDisplay.textContent = 'センサーの利用が許可されませんでした。ページを再読み込みしてやり直せます。';
+      return;
+    }
 
-  if (!voice) {
-    const ctx = new AudioContext();
-    await ctx.resume();
-    voice = new Voice(ctx);
-    listenTilt(handleTilt);
-  }
+    if (!voice) {
+      const ctx = new AudioContext();
+      await ctx.resume();
+      voice = new Voice(ctx);
+      listenTilt(handleTilt);
+    }
 
-  voice.start();
-  toggleButton.textContent = 'とめる';
-  statusDisplay.textContent = '本体を前後にかたむけて音程をかえよう';
+    voice.start();
+    toggleButton.textContent = 'とめる';
+    statusDisplay.textContent = '本体を前後にかたむけて音程をかえよう';
+  } catch {
+    statusDisplay.textContent = '開始できませんでした。もう一度タップするか、ページを再読み込みしてください。';
+  }
 }
 
 function stopPlaying(): void {
