@@ -2,11 +2,16 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ふるんじゃ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>ふるんじゃ — かたむけて鳴らすWebオタマトーン</title>
   </head>
   <body>
-    <p>準備中</p>
+    <main>
+      <h1>ふるんじゃ</h1>
+      <p id="note" aria-live="polite">&mdash;</p>
+      <button id="toggle" type="button">ならす</button>
+      <p id="status" aria-live="polite"></p>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

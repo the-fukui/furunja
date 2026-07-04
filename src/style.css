@@ -1,0 +1,49 @@
+:root {
+  color-scheme: light dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+main {
+  text-align: center;
+  padding: 24px;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+#note {
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 24px 0;
+  min-height: 1.2em;
+  font-variant-numeric: tabular-nums;
+}
+
+#toggle {
+  font-size: 1.5rem;
+  padding: 16px 48px;
+  border-radius: 999px;
+  border: none;
+  background: #f08300;
+  color: #fff;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+#status {
+  min-height: 1.5em;
+  opacity: 0.7;
+}
