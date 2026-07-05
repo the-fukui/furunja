@@ -1,5 +1,5 @@
 // 縦型鍵盤のレイアウトを組み立てる純粋ロジックと、それをDOMへ反映する処理。
-// 白鍵だけで等間隔の行を作り、黒鍵はその境界に本物のピアノと同じ寄り方でオーバーレイする。
+// 白鍵だけで等間隔の行を作り、黒鍵はその境界を中心にオーバーレイする。
 
 import { semitoneToNoteName } from './pitch';
 
@@ -12,7 +12,7 @@ const NOTE_TO_PITCH_CLASS: Record<string, number> = {
 const BLACK_KEY_LEAN: Record<number, number> = { 1: -1, 3: 1, 6: -1, 8: 0, 10: 1 };
 
 const BLACK_KEY_HEIGHT_RATIO = 0.55; // 白鍵の高さに対する黒鍵の高さの比率
-const BLACK_KEY_SHIFT_RATIO = 0.3; // 白鍵の高さに対する黒鍵の中心ずらし量の比率
+const BLACK_KEY_SHIFT_RATIO = 0; // 白鍵の高さに対する黒鍵の中心ずらし量の比率
 
 function pitchClass(semitone: number): number {
   const noteName = semitoneToNoteName(semitone).replace(/-?\d+$/, '');

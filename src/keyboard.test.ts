@@ -14,14 +14,14 @@ describe('buildKeyboardLayout', () => {
     }
   });
 
-  it('黒鍵は隣接する白鍵の境界を基準に、実物のピアノと同じ側へ寄る', () => {
+  it('黒鍵は隣接する白鍵の境界に中心を揃える', () => {
     const { blackKeys } = buildKeyboardLayout(2);
-    // A#4(+1): B4/A4の境界(1/3)からB4側(上)へ寄る
+    // A#4: B4/A4の境界(1/3)が中心
     const aSharp = blackKeys.find((k) => k.semitone === 1);
-    expect(aSharp?.top).toBeCloseTo(0.141667);
+    expect(aSharp?.top).toBeCloseTo(1 / 3 - ((1 / 3) * 0.55) / 2);
     expect(aSharp?.height).toBeCloseTo((1 / 3) * 0.55);
 
-    // G#4(-1): A4/G4の境界(2/3)から寄らず中央
+    // G#4: A4/G4の境界(2/3)が中心
     const gSharp = blackKeys.find((k) => k.semitone === -1);
     expect(gSharp?.top).toBeCloseTo(2 / 3 - ((1 / 3) * 0.55) / 2);
   });
@@ -42,7 +42,7 @@ describe('semitoneCenter', () => {
 
   it('黒鍵の中心位置を返す', () => {
     const layout = buildKeyboardLayout(2);
-    expect(semitoneCenter(layout, 1)).toBeCloseTo(0.2333, 3);
+    expect(semitoneCenter(layout, 1)).toBeCloseTo(1 / 3);
   });
 
   it('存在しない半音は0を返す', () => {
