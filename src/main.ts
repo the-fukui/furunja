@@ -1,7 +1,8 @@
 import './style.css';
-import { tiltToSemitone, semitoneToFrequency, semitoneToNoteName } from './pitch';
+import { tiltToSemitone, semitoneToFrequency, semitoneToNoteName, SEMITONE_RANGE } from './pitch';
 import { Voice } from './audio';
 import { requestOrientationPermission, listenTilt } from './orientation';
+import { buildKeyboardLayout, renderKeyboard, semitoneCenter } from './keyboard';
 
 function mustQuery<T extends Element>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -14,6 +15,11 @@ function mustQuery<T extends Element>(selector: string): T {
 const toggleButton = mustQuery<HTMLButtonElement>('#toggle');
 const noteDisplay = mustQuery<HTMLParagraphElement>('#note');
 const statusDisplay = mustQuery<HTMLParagraphElement>('#status');
+const keyboardDisplay = mustQuery<HTMLDivElement>('#keyboard');
+const keyPointer = mustQuery<HTMLDivElement>('#key-pointer');
+
+const keyboardLayout = buildKeyboardLayout(SEMITONE_RANGE);
+renderKeyboard(keyboardDisplay, keyboardLayout);
 
 let voice: Voice | null = null;
 let currentSemitone: number | null = null;
@@ -29,6 +35,7 @@ function handleTilt(betaDeg: number): void {
   currentSemitone = semitone;
   voice.setFrequency(semitoneToFrequency(semitone));
   noteDisplay.textContent = semitoneToNoteName(semitone);
+  keyPointer.style.setProperty('--pointer-fraction', String(semitoneCenter(keyboardLayout, semitone)));
 }
 
 async function startPlaying(): Promise<void> {
@@ -53,6 +60,7 @@ async function startPlaying(): Promise<void> {
     voice.start();
     toggleButton.textContent = 'とめる';
     statusDisplay.textContent = '本体を前後にかたむけて音程をかえよう';
+    keyPointer.classList.add('visible');
   } catch {
     statusDisplay.textContent = '開始できませんでした。もう一度タップするか、ページを再読み込みしてください。';
   }
@@ -62,6 +70,7 @@ function stopPlaying(): void {
   voice?.stop();
   toggleButton.textContent = 'ならす';
   statusDisplay.textContent = '';
+  keyPointer.classList.remove('visible');
 }
 
 toggleButton.addEventListener('click', () => {
